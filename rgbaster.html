@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>自动取色</title>
+	<style type="text/css">
+		body{
+		    background: #00213e;
+		}
+		img{
+			width:100px;
+			height:100px;
+		}
+		.box{
+			width:100px;
+			height:100px;
+			outline: 1px solid #999;
+		}
+		#imaggbox{
+			width:200px;
+			height:200px;
+			background-size: contain;
+		    background-repeat: no-repeat;
+		    background-position: 0 center;
+		    /*background-color: #fff;*/
+		}
+	</style>
+</head>
+<body>
+
+<div>
+	<img id="image">
+	<div id="imaggbox"></div>
+	<div id="box1" class="box"></div>
+	<div id="box2" class="box"></div>
+	<div id="box3" class="box"></div>
+</div>
+
+<script src="./rgbaster.min.js"></script>
+<script type="text/javascript">
+	var img = document.getElementById('image');
+	var imaggbox = document.getElementById('imaggbox');
+	var box1 = document.getElementById('box1');
+	var box2 = document.getElementById('box2');
+	var box3 = document.getElementById('box3');
+
+	function setImage(num) {
+		var imgURL = './images/logo' + num + '.png';
+		img.src = imgURL
+		imaggbox.style.backgroundImage = 'url(' + imgURL + ')';
+
+		RGBaster.colors(img, {
+			// exclude: ['rgb(255,255,255)', 'rgb(0,0,0)'], // 不包括黑色和白色
+			success: function(payload) {
+				box1.style.backgroundColor = payload.dominant;
+				box2.style.backgroundColor = payload.secondary;
+				box3.style.backgroundColor = payload.palette;
+				imaggbox.style.backgroundColor = payload.dominant;
+				// console.log(payload.dominant); //payload.dominant是主色，RGB形式表示
+				// console.log(payload.secondary); // payload.secondary是次色，RGB形式表示
+				// console.log(payload.palette); // payload.palette是调色板，含多个主要颜色，数组
+			}
+		});
+	}
+
+	var index = 0;
+	setInterval(function() {
+		setImage((index+1) % 10);
+		index++;
+	}, 3000)
+
+</script>
+</body>
+</html>
